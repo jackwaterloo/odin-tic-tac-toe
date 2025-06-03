@@ -10,21 +10,21 @@
  * @property {function(): void} resetBoard - Resets the board to its initial empty state.
  */
 const GameBoard = (function () {
-    let board = Array(9).fill(""); // Initialize a 3x3 board with empty strings
+  let board = Array(9).fill(""); // Initialize a 3x3 board with empty strings
 
-    return {
-        getBoard: () => board, // Returns the current state of the board
-        setCell: (index, value) => {
-            if (index >= 0 && index < 9 && board === "") { // Check if index is valid and cell is empty
-                board[index] = value; // Set the cell to the given value (X or O)
-                return true;
-            }
-            return false;
-        },
-        resetBoard: () => {
-            board = Array(9).fill(""); 
-        }
-    };
+  return {
+    getBoard: () => board, // Returns the current state of the board
+    setCell: (index, value) => {
+      if (index >= 0 && index < 9 && board[index] === "") { // Check if index is valid and cell is empty
+        board[index] = value; // Set the cell to the given value (X or O)
+        return true;
+      }
+      return false;
+    },
+    resetBoard: () => {
+      board = Array(9).fill("");
+    }
+  };
 })();
 
 /**
@@ -36,10 +36,10 @@ const GameBoard = (function () {
  *   An object with methods to get the player's name and marker.
  */
 const Player = (name, marker) => {
-    const getName = () => name;
-    const getMarker = () => marker;
+  const getName = () => name;
+  const getMarker = () => marker;
 
-    return { getName, getMarker };
+  return { getName, getMarker };
 }
 
 /**
@@ -75,111 +75,124 @@ const Player = (name, marker) => {
  * @description Switches the turn to the other player.
  */
 const GameController = (function () {
-    let players = [];
-    let currentPlayerIndex = 0;
-    let isGameOver = false;
+  let players = [];
+  let currentPlayerIndex = 0;
+  let isGameOver = false;
 
-    const startGame = (player1Name, player2Name) => {
-        players = [
-            Player(player1Name, "X"),
-            Player(player2Name, "O")
-        ];
+  const startGame = (player1Name, player2Name) => {
+    players = [
+      Player(player1Name, "X"),
+      Player(player2Name, "O")
+    ];
 
-        currentPlayerIndex = 0;
+    currentPlayerIndex = 0;
 
-        GameBoard.resetBoard();
-    };
+    GameBoard.resetBoard();
+  };
 
-    // plays round and sets sell on game board with current player.
-    // returns false if game over. Returns true if still another round
-    const playRound = (index) => {
-        if (isGameOver) {
-            return false;
-        }
-        const setCellSuccessful = GameBoard.setCell(index,getCurrentPlayer().getMarker());
+  // plays round and sets sell on game board with current player.
+  // returns false if game over. Returns true if still another round
+  const playRound = (index) => {
+    if (isGameOver) {
+      return false;
+    }
+    const setCellSuccessful = GameBoard.setCell(index, getCurrentPlayer().getMarker());
 
-        if (!setCellSuccessful) {
-            return false;
-        }
+    if (!setCellSuccessful) {
+      return false;
+    }
 
-        const winner = checkWinner();
-        if (winner === null) {
-            switchPlayer();
-        } else {
-            isGameOver = true;
-        }
-        return true;
-        
-    };
+    const winner = checkWinner();
+    if (winner === null) {
+      switchPlayer();
+    } else {
+      isGameOver = true;
+    }
+    return true;
 
-    // check winner function
-    const checkWinner = () => {
-        const board = GameBoard.getBoard();
-        // check horizontal wins
-        for (const i of [0, 3, 6]) {
-            let row = [];
-            for (let j = 0; j < 3; j++) {
-                let index = i + j;
-                row.push(board[index]);
-            }
-            if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
-                return row[0];
-            }
-        }
+  };
 
-        // check vertical wins
-        for (let i = 0; i < 3; i++) {
-            let row = [];
-            for (const j of [0, 3, 6]) {
-                let index = i + j;
-                row.push(board[index]);
-            }
-            if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
-                return row[0];
-            }
-        }
+  // check winner function
+  const checkWinner = () => {
+    const board = GameBoard.getBoard();
+    // check horizontal wins
+    for (const i of [0, 3, 6]) {
+      let row = [];
+      for (let j = 0; j < 3; j++) {
+        let index = i + j;
+        row.push(board[index]);
+      }
+      if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
+        return row[0];
+      }
+    }
 
-        // check diagonal wins
-        for (const diagonalSet of [[0, 4, 8], [2, 4, 6]]) {
-            let diagonal = [];
-            for (const index of diagonalSet) {
-                diagonal.push(board[index]);
-            }
-            if (diagonal[0] === diagonal[1] && diagonal[1] === diagonal[2] && diagonal[0] !== "") {
-                return diagonal[0];
-            }
-        }
+    // check vertical wins
+    for (let i = 0; i < 3; i++) {
+      let row = [];
+      for (const j of [0, 3, 6]) {
+        let index = i + j;
+        row.push(board[index]);
+      }
+      if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
+        return row[0];
+      }
+    }
 
-        // if there are no blank spaces, it is a tie
-        if (!board.includes("")) {
-            return "tie";
-        } else {
-            return null;
-        }
-    };
+    // check diagonal wins
+    for (const diagonalSet of [[0, 4, 8], [2, 4, 6]]) {
+      let diagonal = [];
+      for (const index of diagonalSet) {
+        diagonal.push(board[index]);
+      }
+      if (diagonal[0] === diagonal[1] && diagonal[1] === diagonal[2] && diagonal[0] !== "") {
+        return diagonal[0];
+      }
+    }
 
-    // switch player function
-    const switchPlayer = () => {
-        currentPlayerIndex = 1 - currentPlayerIndex;
-    };
+    // if there are no blank spaces, it is a tie
+    if (!board.includes("")) {
+      return "tie";
+    } else {
+      return null;
+    }
+  };
 
-    // get current player function
-    const getCurrentPlayer = () => {
-        return players[currentPlayerIndex];
-    };
+  // switch player function
+  const switchPlayer = () => {
+    currentPlayerIndex = 1 - currentPlayerIndex;
+  };
 
-    // reset game
-    const resetGame = () => {
-        currentPlayerIndex = 0;
+  // get current player function
+  const getCurrentPlayer = () => {
+    return players[currentPlayerIndex];
+  };
 
-        GameBoard.resetBoard();
-    };
+  // reset game
+  const resetGame = () => {
+    currentPlayerIndex = 0;
 
-    return {
-        startGame,
-        playRound,
-        checkWinner,
-        getCurrentPlayer,
-        resetGame
-    };
+    GameBoard.resetBoard();
+  };
+
+  return {
+    startGame,
+    playRound,
+    checkWinner,
+    getCurrentPlayer,
+    resetGame
+  };
+})();
+
+// Display controller IIFE
+const DisplayController = (function () {
+  // DOM elements
+
+  // function to render board
+
+  // function to set set result message at end of game
+
+  // get player names from input fields
+
+  // apply handlers to buttons
 })();
