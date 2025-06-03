@@ -180,7 +180,8 @@ const GameController = (function () {
     playRound,
     checkWinner,
     getCurrentPlayer,
-    resetGame
+    resetGame,
+    isGameOver
   };
 })();
 

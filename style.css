@@ -1,6 +1,23 @@
-body:first-child {
+body > div:first-child {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.gameBoard {
+    --width: min(66vw,300px);
+    width: var(--width);
+    height: var(--width);
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+    gap: 10px;
+}
+
+.boardSquare {
+    border: 2px solid black;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
 }
