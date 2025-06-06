@@ -188,12 +188,71 @@ const GameController = (function () {
 // Display controller IIFE
 const DisplayController = (function () {
   // DOM elements
-
+  const newGameBtn = document.querySelector("#newGameBtn");
+  const resetGameBtn = document.querySelector("#resetGameBtn");
+  const gameBoardDiv = document.querySelector(".gameBoard");
+  const playerNamesDiv = document.querySelector("#playerNamesDiv");
   // function to render board
+  const renderBoard = () => {
+    board = GameBoard.getBoard();
 
+    // clear gameboard display
+    gameBoardDiv.innerHTML = "";
+
+    for (let squareValue of board) {
+      let div = document.createElement("div");
+      div.classList.add("boardSquare");
+      div.innerHTML = squareValue;
+      gameBoardDiv.appendChild(div);
+    }
+  }
   // function to set set result message at end of game
+  const newGameBtnApplyListener = () => {
+    newGameBtn.addEventListener("click", (e) => {
+      // make player names form visible
+      playerNamesDiv.classList.remove("hidden");
+      // hide game board while form is being filled out
+      gameBoardDiv.classList.add("hidden");
+      resetGameBtn.classList.add("hidden");
+    });
+  }
+
+  const submitNamesBtnApplyListener = () => {
+    const submitNamesBtn = document.querySelector("#submitNamesBtn");
+    submitNamesBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const {player1Name, player2Name} = getPlayerNames();
+
+      // deal with hidden elements
+      playerNamesDiv.classList.add("hidden");
+      gameBoardDiv.classList.remove("hidden");
+      resetGameBtn.classList.remove("hidden");
+
+      newGameBtn.textContent = "New Game";
+
+      GameController.startGame(player1Name,player2Name);
+      renderBoard();
+    });
+  }
 
   // get player names from input fields
+  const getPlayerNames = () => {
+    const player1Name = document.querySelector("#player1Name").value.trim();
+    const player2Name = document.querySelector("#player2Name").value.trim();
+    return {
+      player1Name,
+      player2Name
+    }
+  }
 
+  // apply button listeners immediately
+  submitNamesBtnApplyListener();
+  newGameBtnApplyListener();
+
+
+  return {
+    renderBoard,
+    getPlayerNames
+  }
   // apply handlers to buttons
 })();

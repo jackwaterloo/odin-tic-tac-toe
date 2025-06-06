@@ -9,7 +9,21 @@
 <body>
     <div>
         <h1>Tic Tac Toe</h1>
-        <div class="gameBoard">
+        <div id="btnsDiv">
+            <button type="button" id="newGameBtn">Start Game</button>
+            <button type="button" id="resetGameBtn" class="hidden">Reset Game</button>
+        </div>
+        <div id="playerNamesDiv" class="hidden">
+            <form action="">
+                <label for="player1Name">Player 1 Name: </label>
+                <input type="text" id="player1Name">
+                <br>
+                <label for="player2Name">Player 2 Name: </label>
+                <input type="text" id="player2Name">
+                <button type="submit" id="submitNamesBtn" autofocus>Submit Names</button> <!--Use preventfail for this-->
+            </form>
+        </div>
+        <div class="gameBoard hidden">
             <div class="boardSquare"></div>
             <div class="boardSquare"></div>
             <div class="boardSquare"></div>
