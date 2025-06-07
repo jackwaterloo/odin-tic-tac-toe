@@ -112,6 +112,11 @@ const GameController = (function () {
 
   };
 
+  // is game over function
+  const getIsGameOver = () => {
+    return isGameOver;
+  }
+
   // check winner function
   const checkWinner = () => {
     const board = GameBoard.getBoard();
@@ -181,7 +186,7 @@ const GameController = (function () {
     checkWinner,
     getCurrentPlayer,
     resetGame,
-    isGameOver
+    getIsGameOver
   };
 })();
 
@@ -199,12 +204,14 @@ const DisplayController = (function () {
     // clear gameboard display
     gameBoardDiv.innerHTML = "";
 
-    for (let squareValue of board) {
+    for (let i = 0; i < board.length; i++) {
       let div = document.createElement("div");
       div.classList.add("boardSquare");
-      div.innerHTML = squareValue;
+      div.setAttribute("data-index",i);
+      div.innerHTML = board[i];
       gameBoardDiv.appendChild(div);
     }
+    boardSquareApplyListener();
   }
   // function to set set result message at end of game
   const newGameBtnApplyListener = () => {
@@ -235,6 +242,35 @@ const DisplayController = (function () {
     });
   }
 
+  const boardSquareApplyListener = () => {
+    const squareList = document.querySelectorAll(".boardSquare");
+
+    for (const boardSquare of squareList) {
+
+      boardSquare.addEventListener("click",(e) => {
+        if (GameController.getIsGameOver()) {
+          return
+        }
+        const index = e.target.getAttribute("data-index");
+        const roundSuccess = GameController.playRound(index);
+        console.log("round success:",roundSuccess);
+        renderBoard();
+        if (GameController.getIsGameOver()) {
+          const winner = GameController.checkWinner();
+          console.log(winner);
+          switch (winner) {
+            case "tie":
+              alert("It's a tie!");
+              break;
+            default:
+              alert(`${GameController.getCurrentPlayer().getName()} Wins!`)
+              break;
+          }
+        }
+      });
+    }
+  };
+
   // get player names from input fields
   const getPlayerNames = () => {
     const player1Name = document.querySelector("#player1Name").value.trim();
@@ -254,5 +290,4 @@ const DisplayController = (function () {
     renderBoard,
     getPlayerNames
   }
-  // apply handlers to buttons
 })();
