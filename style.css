@@ -21,6 +21,12 @@ body > div:first-child {
     width: 100%;
     height: 100%;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 4.5rem;
+    font-weight: 700;
 }
 
 .hidden {
