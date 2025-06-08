@@ -70,6 +70,10 @@ const Player = (name, marker) => {
  * @function resetGame
  * @description Resets the game state and board for a new game.
  * 
+ * @function getIsGameOver
+ * @description Returns whether the game is currently over.
+ * @returns {boolean} True if the game is over, false otherwise.
+ * 
  * @private
  * @function switchPlayer
  * @description Switches the turn to the other player.
@@ -177,7 +181,7 @@ const GameController = (function () {
   // reset game
   const resetGame = () => {
     currentPlayerIndex = 0;
-
+    isGameOver = false;
     GameBoard.resetBoard();
   };
 
@@ -191,7 +195,25 @@ const GameController = (function () {
   };
 })();
 
-// Display controller IIFE
+/**
+ * DisplayController is an IIFE (Immediately Invoked Function Expression) module responsible for managing
+ * the user interface and DOM interactions for a Tic-Tac-Toe game. It handles rendering the game board,
+ * updating messages, and managing the visibility and event listeners of UI elements such as buttons and forms.
+ *
+ * Main responsibilities:
+ * - Rendering the game board and updating it after each move.
+ * - Displaying messages for the current player's turn, win, or tie.
+ * - Handling "New Game", "Reset Game", and "Submit Names" button events.
+ * - Managing the visibility of the player names form, game board, and control buttons.
+ * - Retrieving player names from input fields and initializing the game.
+ *
+ * This module interacts with the GameBoard and GameController modules to reflect the current state of the game.
+ *
+ * @module DisplayController
+ * @namespace DisplayController
+ * @see GameBoard
+ * @see GameController
+ */
 const DisplayController = (function () {
   // DOM elements
   const newGameBtn = document.querySelector("#newGameBtn");
@@ -225,23 +247,25 @@ const DisplayController = (function () {
     }
     
   }
-  // function to set set result message at end of game
+
+   //Attaches a click event listener to the "New Game" button.
   const newGameBtnApplyListener = () => {
     newGameBtn.addEventListener("click", (e) => {
       // make player names form visible
       playerNamesDiv.classList.remove("hidden");
-      // hide game board while form is being filled out
+      // hide game board and messagediv while form is being filled out
       gameBoardDiv.classList.add("hidden");
       resetGameBtn.classList.add("hidden");
       messageDiv.classList.add("hidden");
     });
   }
 
+  //Attaches a click event listener to the "Submit Names" button.
   const submitNamesBtnApplyListener = () => {
     const submitNamesBtn = document.querySelector("#submitNamesBtn");
     submitNamesBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      const {player1Name, player2Name} = getPlayerNames();
+      const {player1Name, player2Name} = getPlayerNamesFromInput();
 
       // deal with hidden elements
       playerNamesDiv.classList.add("hidden");
@@ -256,6 +280,15 @@ const DisplayController = (function () {
     });
   }
 
+  // attaches click event listener to the "reset game" button.
+  const resetGameBtnApplyListener = () => {
+    resetGameBtn.addEventListener("click", (e) => {
+      GameController.resetGame();
+      renderBoard();
+    });
+  }
+
+  // Attaches click event listeners to all board squares
   const boardSquareApplyListener = () => {
     const squareList = document.querySelectorAll(".boardSquare");
 
@@ -274,7 +307,7 @@ const DisplayController = (function () {
   };
 
   // get player names from input fields
-  const getPlayerNames = () => {
+  const getPlayerNamesFromInput = () => {
     const player1Name = document.querySelector("#player1Name").value.trim();
     const player2Name = document.querySelector("#player2Name").value.trim();
     return {
@@ -286,10 +319,6 @@ const DisplayController = (function () {
   // apply button listeners immediately
   submitNamesBtnApplyListener();
   newGameBtnApplyListener();
+  resetGameBtnApplyListener();
 
-
-  return {
-    renderBoard,
-    getPlayerNames
-  }
 })();
