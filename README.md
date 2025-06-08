@@ -3,6 +3,8 @@ This project is from the Odin Project course which can be found here: [https://w
 
 I have attached the directions `project_tic_tac_toe.md` in this repo but the website above will have the most up to date instructions.
 
+See my deployed project here: [https://jackwaterloo.github.io/odin-tic-tac-toe/](https://jackwaterloo.github.io/odin-tic-tac-toe/)
+
 ## JavaScript Skills and Techniques Demonstrated
 
 This project showcases a variety of JavaScript concepts and best practices for web development:
