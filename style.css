@@ -36,3 +36,7 @@ body > div:first-child {
 dialog {
     padding: 30px;
 }
+
+.message {
+    font-size: 3rem;
+}

@@ -86,6 +86,7 @@ const GameController = (function () {
     ];
 
     currentPlayerIndex = 0;
+    isGameOver = false;
 
     GameBoard.resetBoard();
   };
@@ -197,6 +198,7 @@ const DisplayController = (function () {
   const resetGameBtn = document.querySelector("#resetGameBtn");
   const gameBoardDiv = document.querySelector(".gameBoard");
   const playerNamesDiv = document.querySelector("#playerNamesDiv");
+  const messageDiv = document.querySelector(".message");
   // function to render board
   const renderBoard = () => {
     board = GameBoard.getBoard();
@@ -212,6 +214,16 @@ const DisplayController = (function () {
       gameBoardDiv.appendChild(div);
     }
     boardSquareApplyListener();
+
+    // change message per turn
+    if (GameController.checkWinner()===null) {
+      messageDiv.textContent = `${GameController.getCurrentPlayer().getName()}'s Turn`;
+    } else if (GameController.checkWinner()==="tie") {
+      messageDiv.textContent = `🐈Cat's game!!🐈`;
+    } else {
+      messageDiv.textContent = `🏆${GameController.getCurrentPlayer().getName()} Wins!!🏆`;
+    }
+    
   }
   // function to set set result message at end of game
   const newGameBtnApplyListener = () => {
@@ -221,6 +233,7 @@ const DisplayController = (function () {
       // hide game board while form is being filled out
       gameBoardDiv.classList.add("hidden");
       resetGameBtn.classList.add("hidden");
+      messageDiv.classList.add("hidden");
     });
   }
 
@@ -234,6 +247,7 @@ const DisplayController = (function () {
       playerNamesDiv.classList.add("hidden");
       gameBoardDiv.classList.remove("hidden");
       resetGameBtn.classList.remove("hidden");
+      messageDiv.classList.remove("hidden");
 
       newGameBtn.textContent = "New Game";
 
@@ -255,18 +269,6 @@ const DisplayController = (function () {
         const roundSuccess = GameController.playRound(index);
         console.log("round success:",roundSuccess);
         renderBoard();
-        if (GameController.getIsGameOver()) {
-          const winner = GameController.checkWinner();
-          console.log(winner);
-          switch (winner) {
-            case "tie":
-              alert("It's a tie!");
-              break;
-            default:
-              alert(`${GameController.getCurrentPlayer().getName()} Wins!`)
-              break;
-          }
-        }
       });
     }
   };
